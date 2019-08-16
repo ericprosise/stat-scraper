@@ -1,5 +1,5 @@
 const fs = require('fs');
-const getResults = require('./sample.js');
+const getResults = require('./scraper.js');
 (async () => {
     let results = await getResults()
     let jsonString = JSON.stringify(results);
