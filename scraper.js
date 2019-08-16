@@ -1,5 +1,6 @@
 let cheerio = require('cheerio');
 let axios = require('axios');
+let rushingReceivingHtml = require('./rushingReceiving');
 
 const url = 'https://www.pro-football-reference.com/players/S/StarBa00.htm';
 
@@ -128,8 +129,6 @@ const getResults = async () => {
 
 
         }
-        // if (i === 0)
-        //     player.playerInformation.fullName = $(info).slice(i, 1).eq(0).find('strong').text();
     });
 
 
@@ -148,25 +147,12 @@ const getResults = async () => {
 
     });
 
-    //Playoff Passing
-    const passingPlayoffTable = $('div#div_passing_playoffs table tbody tr');
-    let yearPassingPlayoffRecord = {};
-    passingPlayoffTable.each((i, row) => {
-        passingStats.forEach((stat) => {
-            yearPassingPlayoffRecord = {
-                ...yearPassingPlayoffRecord,
-                [stat]: $(row).find(`[data-stat=${stat}]`).text()
-            };
-        });
 
-        player.passingPlayoffStats.push(yearPassingPlayoffRecord);
-
-    });
+    $ = cheerio.load(rushingReceivingHtml);
 
     //Rushing/Receiving Table
     //There's an error with this I believe due to PFR having commented code that this is matching on
-    const rushingReceivingTable = $('div#div_rushing_and_receiving table#rushing_and_receiving tbody tr');
-    // console.log('rushingReceivingTable: ', rushingReceivingTable.children());
+    const rushingReceivingTable = $('table#rushing_and_receiving tbody tr');
     let yearRushingReceivingRecord = {};
     rushingReceivingTable.each((i, row) => {
         rushingReceivingStats.forEach((stat) => {
@@ -180,24 +166,6 @@ const getResults = async () => {
 
     });
 
-    // //Rushing Table
-    // const rushingTable = $('div#div_rushing_and_receiving table#rushing_and_receiving tbody tr');
-    // console.log('rushingTable: ', rushingTable);
-    // let yearRushingRecord = {};
-    // rushingTable.each((i, row) => {
-    //     console.log('row: ', row);
-    //     rushingStats.forEach((stat) => {
-    //         yearRushingRecord = {
-    //             ...yearRushingRecord,
-    //             [stat]: $(row).find(`[data-stat=${stat}]`).text()
-    //         };
-    //     });
-    //     player.rushingStats.push(yearRushingRecord);
-    // });
-
-
-
-    // console.log(player);
     return {
         player: player
     }
