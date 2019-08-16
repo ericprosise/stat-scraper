@@ -9,6 +9,7 @@ const url = 'https://www.pro-football-reference.com/players/S/StarBa00.htm';
 var player = {
     playerInformation: {},
     passingStats: [],
+    careerPassingStats: {},
     passingPlayoffStats: [],
     rushingReceivingStats: []
 };
@@ -147,12 +148,27 @@ const getResults = async () => {
 
     });
 
+    const careerPassing = $('div#div_passing table tfoot tr');
+    let careerPassingRecord = {};
+    careerPassing.each((i, row) => {
+        passingStats.forEach((stat) => {
+            careerPassingRecord = {
+                ...careerPassingRecord,
+                [stat]: $(row).find(`[data-stat=${stat}]`).text()
+            };
+        });
+
+        player.careerPassingStats = Object.assign({}, careerPassingRecord);
+
+    });
+
 
     $ = cheerio.load(rushingReceivingHtml);
 
     //Rushing/Receiving Table
     //There's an error with this I believe due to PFR having commented code that this is matching on
     const rushingReceivingTable = $('table#rushing_and_receiving tbody tr');
+    // const rushingReceivingTable = $('div#div_rushing_and_receiving table#rushing_and_receiving tbody tr');
     let yearRushingReceivingRecord = {};
     rushingReceivingTable.each((i, row) => {
         rushingReceivingStats.forEach((stat) => {
